@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #chatroom {
+            height: 200px;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        #msg {
+            width: 100%;
+        }
+    </style>    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<form id="chatform">
+    <div id="chatroom"></div>
+    <input type="text" name="msg" id="msg" />
+</form>
+
+<script>
+
+(function() {
+
+    var socket = io.connect(window.location.href);
+
+    socket.on('message', function (msg) {
+        $('#chatroom').append($('<div>').text(msg));
+    });
+
+    $('#chatform').submit(function(e) {
+        e.preventDefault();
+        socket.emit('message', $('#msg').val());
+        $('#msg').val('');
+        $('#chatroom').scrollTop($('#chatroom').outerHeight());
+    });
+
+})();
+
+
+</script>
+
+</body>
+</html>
